@@ -46,10 +46,10 @@ TIM_HandleTypeDef htim16;
 /* USER CODE BEGIN PV */
 // TODO: Define input variables
 #include <stdlib.h>
-char mode = 3; //The mode of the LEDs
+char mode = 0; //The mode of the LEDs
 char direction = 0; //The direction that the LED moves in modes 1 and 2
 char index = 0; //The index of the LED in modes 1 and 2
-
+char speed = 0;
 uint32_t randint(uint32_t min, uint32_t max) {
 	return (rand()%(max-min))+min;
 }
@@ -118,7 +118,25 @@ int main(void)
     /* USER CODE BEGIN 3 */
 
     // TODO: Check pushbuttons to change timer delay
-
+	if (!(GPIOA->IDR&(1<<0))) { //if button 0 is pressed
+		speed = !speed;
+		if (speed) {TIM16->ARR = 500-1;} //set delay to 0.5 seconds
+		else {TIM16->ARR = 1000-1;} //set delay to 1 second
+	}
+	if (!(GPIOA->IDR&(1<<1))) { //if button 1 is pressed
+		mode = 1;
+		if (speed) {TIM16->ARR = 500-1;} //set delay to 0.5 seconds
+		else {TIM16->ARR = 1000-1;} //set delay to 1 second
+	}
+	if (!(GPIOA->IDR&(1<<2))) { //if button 2 is pressed
+		mode = 2;
+		if (speed) {TIM16->ARR = 500-1;} //set delay to 0.5 seconds
+		else {TIM16->ARR = 1000-1;} //set delay to 1 second
+	}
+	if (!(GPIOA->IDR&(1<<3))) { //if button 3 is pressed
+		mode = 3;
+		GPIOB->ODR &= ~0xFF;
+	}
 
     
 
@@ -335,6 +353,8 @@ void TIM16_IRQHandler(void)
 
 	// TODO: Change LED pattern
 	TIM16->SR &= ~TIM_SR_UIF; //clear flag
+
+	if (mode==0) {return;} //if there's no mode yet
 
 	if (mode==3) {
 		if (GPIOB->ODR&0xFF) { //if there are active LEDs
