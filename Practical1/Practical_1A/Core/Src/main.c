@@ -45,9 +45,14 @@ TIM_HandleTypeDef htim16;
 
 /* USER CODE BEGIN PV */
 // TODO: Define input variables
-char mode = 2; //The mode of the LEDs
+#include <stdlib.h>
+char mode = 3; //The mode of the LEDs
 char direction = 0; //The direction that the LED moves in modes 1 and 2
 char index = 0; //The index of the LED in modes 1 and 2
+
+uint32_t randint(uint32_t min, uint32_t max) {
+	return (rand()%(max-min))+min;
+}
 
 /* USER CODE END PV */
 
@@ -90,13 +95,13 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-//  MX_TIM16_Init();//#
+  MX_TIM16_Init();//#
   /* USER CODE BEGIN 2 */
 
   // TODO: Start timer TIM16
-  RCC->APB2ENR |= RCC_APB2ENR_TIM16EN;
-  TIM16->PSC = 8000-1;
-  TIM16->ARR = 1000-1;
+//  RCC->APB2ENR |= RCC_APB2ENR_TIM16EN;
+//  TIM16->PSC = 8000-1;
+//  TIM16->ARR = 1000-1;
   TIM16->DIER |= TIM_DIER_UIE;
   NVIC_EnableIRQ(TIM16_IRQn);
   TIM16->CR1 |= TIM_CR1_CEN;
@@ -325,14 +330,35 @@ static void MX_GPIO_Init(void)
 void TIM16_IRQHandler(void)
 {
 	// Acknowledge interrupt
-//	HAL_TIM_IRQHandler(&htim16);//#
-	TIM16->SR &= ~TIM_SR_UIF;
+	HAL_TIM_IRQHandler(&htim16);//#
 
 
 	// TODO: Change LED pattern
-	if (mode==3) {
+	TIM16->SR &= ~TIM_SR_UIF; //clear flag
 
-	} else {
+	if (mode==3) {
+		if (GPIOB->ODR&0xFF) { //if there are active LEDs
+			for (uint32_t i=1; i<=(1<<7); i=i<<1) { //check all the LEDs
+				if (GPIOB->ODR&i) { //if this LED is on
+					GPIOB->ODR &= ~(i); //turn off the LED
+					//check LEDs again
+					if (GPIOB->ODR&0xFF) { //if there are active LEDs
+						TIM16->ARR = randint(9, 100); //note: the effects of changing the ARR only appear after the next interrupt
+//						TIM16->ARR = 100-1;
+					} else {
+						TIM16->ARR = randint(99, 1500); //note: the effects of changing the ARR only appear after the next interrupt
+//						TIM16->ARR = 500-1;
+					}
+					break;
+				}
+			}
+		} else {
+			GPIOB->ODR |= randint(0, 256); //turn on random LEDs
+			TIM16->ARR = randint(9, 100); //note: the effects of changing the ARR only appear after the next interrupt
+//			TIM16->ARR = 100-1;
+		}
+
+	} else { //modes 1 and 2
 		//clear the LEDs
 		if (mode==2) {
 			GPIOB->ODR |= 0xFF;
