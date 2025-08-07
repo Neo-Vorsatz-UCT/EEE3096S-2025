@@ -45,7 +45,9 @@ TIM_HandleTypeDef htim16;
 
 /* USER CODE BEGIN PV */
 // TODO: Define input variables
-
+char mode = 2; //The mode of the LEDs
+char direction = 0; //The direction that the LED moves in modes 1 and 2
+char index = 0; //The index of the LED in modes 1 and 2
 
 /* USER CODE END PV */
 
@@ -88,11 +90,16 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_TIM16_Init();
+//  MX_TIM16_Init();//#
   /* USER CODE BEGIN 2 */
 
   // TODO: Start timer TIM16
- 
+  RCC->APB2ENR |= RCC_APB2ENR_TIM16EN;
+  TIM16->PSC = 8000-1;
+  TIM16->ARR = 1000-1;
+  TIM16->DIER |= TIM_DIER_UIE;
+  NVIC_EnableIRQ(TIM16_IRQn);
+  TIM16->CR1 |= TIM_CR1_CEN;
 
   /* USER CODE END 2 */
 
@@ -318,10 +325,43 @@ static void MX_GPIO_Init(void)
 void TIM16_IRQHandler(void)
 {
 	// Acknowledge interrupt
-	HAL_TIM_IRQHandler(&htim16);
+//	HAL_TIM_IRQHandler(&htim16);//#
+	TIM16->SR &= ~TIM_SR_UIF;
+
 
 	// TODO: Change LED pattern
+	if (mode==3) {
 
+	} else {
+		//clear the LEDs
+		if (mode==2) {
+			GPIOB->ODR |= 0xFF;
+		} else {
+			GPIOB->ODR &= ~0xFF;
+		}
+		//change the index
+		if (direction) {
+			if (index==7) {
+				direction = 0;
+				index = 6;
+			} else {
+				index++;
+			}
+		} else {
+			if (index==0) {
+				direction = 1;
+				index = 1;
+			} else {
+				index--;
+			}
+		}
+		//write to the correct LED
+		if (mode==2) {
+			GPIOB->ODR &= ~(1<<index);
+		} else {
+			GPIOB->ODR |= (1<<index);
+		}
+	}
 
 
 }
