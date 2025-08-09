@@ -51,6 +51,10 @@
   checksum: should be uint64_t
   initial width and height maybe or you might opt for an array??
 */
+int dimensions[] = {128, 160, 192, 224, 256};
+uint64_t checksum;
+int start_time;
+int end_time;
 
 /* USER CODE END PV */
 
@@ -204,6 +208,7 @@ static void MX_GPIO_Init(void)
 uint64_t calculate_mandelbrot_fixed_point_arithmetic(int width, int height, int max_iterations){
   uint64_t mandelbrot_sum = 0;
     //TODO: Complete the function implementation
+
     
     return mandelbrot_sum;
 
@@ -211,8 +216,24 @@ uint64_t calculate_mandelbrot_fixed_point_arithmetic(int width, int height, int 
 
 //TODO: Mandelbroat using variable type double
 uint64_t calculate_mandelbrot_double(int width, int height, int max_iterations){
-    uint64_t mandelbrot_sum = 0;
-    //TODO: Complete the function implementation
+  uint64_t mandelbrot_sum = 0;
+  //TODO: Complete the function implementation
+    for (int y=0; y<height; y++) {
+      for (int x=0; x<width; x++) {
+    	  double x0 = (x/width)*3.5-2.5;
+    	  double y0 = (y/height)*2.0-1.0;
+    	  double xi = 0;
+    	  double yi = 0;
+    	  int iteration = 0;
+    	  while (iteration<max_iterations && (xi*xi+yi*yi)<=4) {
+    		  double temp = xi*xi-yi*yi;
+    		  yi = 2*xi*yi+y0;
+    		  xi = temp+x0;
+    		  iteration++;
+    	  }
+    	  mandelbrot_sum += iteration;
+      }
+    }
     
     return mandelbrot_sum;
 }
