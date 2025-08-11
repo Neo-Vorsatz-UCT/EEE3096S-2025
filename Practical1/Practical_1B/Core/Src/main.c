@@ -55,6 +55,7 @@ int dimensions[] = {128, 160, 192, 224, 256};
 uint64_t checksum;
 int start_time;
 int end_time;
+int execution_time;
 
 /* USER CODE END PV */
 
@@ -103,28 +104,28 @@ int main(void)
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
   //TODO: Turn on LED 0 to signify the start of the operation
-  
+  GPIOB->ODR |= 1;
 
   //TODO: Record the start time
-  
-  
+  start_time = HAL_GetTick();
+
   //TODO: Call the Mandelbrot Function and store the output in the checksum variable defined initially
-  
+  checksum = calculate_mandelbrot_double(dimensions[4], dimensions[4], MAX_ITER);
 
   //TODO: Record the end time
-  
+  end_time = HAL_GetTick();
 
   //TODO: Calculate the execution time
-  
+  execution_time = end_time-start_time;
 
   //TODO: Turn on LED 1 to signify the end of the operation
-  
+  GPIOB->ODR |= 2;
 
   //TODO: Hold the LEDs on for a 1s delay
-  
+  HAL_Delay(1000);
 
   //TODO: Turn off the LEDs
-  
+  GPIOB->ODR &= ~0xFF;
 
   /* USER CODE END 2 */
 
