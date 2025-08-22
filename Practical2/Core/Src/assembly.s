@@ -35,7 +35,39 @@ ASM_Main:
 @ TODO: Add code, labels and logic for button checks and LED patterns
 
 main_loop:
+	@start of student's code
+	LDR R3, GPIOA_BASE
+	LDR R3, [R3, #0x10] @get the state of GPIOA->IDR
 
+	@check if BTN3 is pressed
+    MOVS R4, #8
+	ANDS R4, R4, R3
+	BEQ main_loop @if BTN3 is pressed, continue to next iteration
+
+	@check if BTN2 is pressed
+	MOVS R4, #4
+	ANDS R4, R4, R3
+	BNE skip_btn2 @if BTN2 is not pressed, skip the next instruction
+	MOVS R2, #0xAA @set the LED pattern to 0xAA
+	B write_leds
+	skip_btn2:
+
+	@check if BTN1 is pressed
+	@change delay from 0.7s to 0.3s
+	@otherwise change delay to 0.7s
+
+	@check if BTN0 is pressed
+	MOVS R4, #2
+	ANDS R4, R4, R3
+	BNE skip_btn0 @skip the BTN0 special special function
+	MOVS R4, #2
+	ADD R2, R2, R4 @increment LEDs by 2
+	B write_leds
+	skip_btn0: @normal increment
+	MOVS R4, #1
+	ADD R2, R2, R4 @increment LEDs by 1
+
+	@end of student's code
 
 write_leds:
 	STR R2, [R1, #0x14]
