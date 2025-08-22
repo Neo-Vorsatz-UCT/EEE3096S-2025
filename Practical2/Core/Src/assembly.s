@@ -36,6 +36,7 @@ ASM_Main:
 
 main_loop:
 	@start of student's code
+	@read the buttons
 	LDR R3, GPIOA_BASE
 	LDR R3, [R3, #0x10] @get the state of GPIOA->IDR
 
@@ -53,20 +54,29 @@ main_loop:
 	skip_btn2:
 
 	@check if BTN1 is pressed
-	@change delay from 0.7s to 0.3s
-	@otherwise change delay to 0.7s
+	LDR R5, LONG_DELAY_CNT @preemptively assume the delay is normal
+	MOVS R4, #2
+	ANDS R4, R4, R3
+	BNE skip_btn1 @skip the BTN1 special function
+	LDR R5, SHORT_DELAY_CNT @set the delay to 0.3s
+	skip_btn1: @normal delay
 
 	@check if BTN0 is pressed
-	MOVS R4, #2
+	MOVS R4, #1
 	ANDS R4, R4, R3
 	BNE skip_btn0 @skip the BTN0 special special function
 	MOVS R4, #2
 	ADD R2, R2, R4 @increment LEDs by 2
-	B write_leds
+	B completed_btn0
 	skip_btn0: @normal increment
 	MOVS R4, #1
-	ADD R2, R2, R4 @increment LEDs by 1
+	ADDS R2, #1 @increment LEDs by 1
+	completed_btn0: @special increment
 
+	@applying delay
+	loop:
+	SUBS R5, #1 @decrement the counter
+	BNE loop @next iteration of the loop
 	@end of student's code
 
 write_leds:
@@ -82,5 +92,5 @@ GPIOB_BASE:  		.word 0x48000400
 MODER_OUTPUT: 		.word 0x5555
 
 @ TODO: Add your own values for these delays
-LONG_DELAY_CNT: 	.word 0
-SHORT_DELAY_CNT: 	.word 0
+LONG_DELAY_CNT: 	.word 1400000 @0.7s*8MHz/4ClockCycles
+SHORT_DELAY_CNT: 	.word 600000 @0.3s*8MHz/4ClockCycles
