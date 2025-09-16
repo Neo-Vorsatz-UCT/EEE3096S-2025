@@ -46,10 +46,16 @@
 // - Performance timing variables (e.g execution time, throughput, pixels per second, clock cycles)
 #define MAX_ITER 100
 int dimensions[] = {128, 160, 192, 224, 256};
-uint64_t checksum;
-int start_time;
-int end_time;
-int execution_time;
+uint64_t checksum0;
+uint64_t checksum1;
+uint64_t checksum2;
+uint64_t checksum3;
+uint64_t checksum4;
+int execution_time0;
+int execution_time1;
+int execution_time2;
+int execution_time3;
+int execution_time4;
 
 /* USER CODE END PV */
 
@@ -108,23 +114,40 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  //TODO: Visual indicator: Turn on LED0 to signal processing start
-  	  GPIOB->ODR |= 1;
+  //TODO: Visual indicator: Turn on LED0 to signal processing start
+  GPIOB->ODR |= 1;
 
-	  //TODO: Benchmark and Profile Performance
-  	  start_time = HAL_GetTick();
-  	  checksum = calculate_mandelbrot_fixed_point_arithmetic(dimensions[0], dimensions[0], MAX_ITER);
-  	  end_time = HAL_GetTick();
-  	  execution_time = end_time-start_time;
+  //TODO: Benchmark and Profile Performance
+  int checksums[5];
+  int execution_times[5];
+  int start_time;
+  int end_time;
+  int max_iter[] = {100, 250, 500, 750, 1000};
+  for (int i=0; i<5; i++) {
+	  start_time = HAL_GetTick();
+	  checksums[i] = calculate_mandelbrot_fixed_point_arithmetic(dimensions[4], dimensions[4], max_iter[i]);
+	  end_time = HAL_GetTick();
+	  execution_times[i] = end_time-start_time;
+  }
+  checksum0 = checksums[0];
+  checksum1 = checksums[1];
+  checksum2 = checksums[2];
+  checksum3 = checksums[3];
+  checksum4 = checksums[4];
+  execution_time0 = execution_times[0];
+  execution_time1 = execution_times[1];
+  execution_time2 = execution_times[2];
+  execution_time3 = execution_times[3];
+  execution_time4 = execution_times[4];
 
-	  //TODO: Visual indicator: Turn on LED1 to signal processing start
-  	  GPIOB->ODR |= 2;
+  //TODO: Visual indicator: Turn on LED1 to signal processing start
+  GPIOB->ODR |= 2;
 
-	  //TODO: Keep the LEDs ON for 2s
-  	  HAL_Delay(2000);
+  //TODO: Keep the LEDs ON for 2s
+  HAL_Delay(2000);
 
-	  // TODO: Turn OFF LEDs
-  	  GPIOB->ODR &= ~0xFF;
+  // TODO: Turn OFF LEDs
+  GPIOB->ODR &= ~0xFF;
   while (1)//relocated by the student
   {//relocated by the student
 
