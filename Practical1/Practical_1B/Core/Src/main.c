@@ -244,8 +244,8 @@ uint64_t calculate_mandelbrot_double(int width, int height, int max_iterations){
   //TODO: Complete the function implementation
     for (int y=0; y<height; y++) {
       for (int x=0; x<width; x++) {
-    	  double x0 = (x/width)*3.5-2.5;
-    	  double y0 = (y/height)*2.0-1.0;
+    	  double x0 = 3.5*x/width-2.5;
+    	  double y0 = 2.0*y/height-1.0;
     	  double xi = 0;
     	  double yi = 0;
     	  int iteration = 0;
@@ -258,7 +258,7 @@ uint64_t calculate_mandelbrot_double(int width, int height, int max_iterations){
     	  mandelbrot_sum += iteration;
       }
     }
-    
+
     return mandelbrot_sum;
 }
 
