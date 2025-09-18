@@ -118,28 +118,28 @@ int main(void)
   GPIOB->ODR |= 1;
 
   //TODO: Benchmark and Profile Performance
-  int start_time = HAL_GetTick();
+//  int start_time = HAL_GetTick();
   int checksums[5];
-//  int execution_times[5];
-//  int start_time;
-//  int end_time;
+  int execution_times[5];
+  int start_time;
+  int end_time;
   for (int i=0; i<5; i++) {
-//	  start_time = HAL_GetTick();
+	  start_time = HAL_GetTick();
 	  checksums[i] = calculate_mandelbrot_fixed_point_arithmetic(dimensions[i], dimensions[i], MAX_ITER);
-//	  end_time = HAL_GetTick();
-//	  execution_times[i] = end_time-start_time;
+	  end_time = HAL_GetTick();
+	  execution_times[i] = end_time-start_time;
   }
   checksum0 = checksums[0];
   checksum1 = checksums[1];
   checksum2 = checksums[2];
   checksum3 = checksums[3];
   checksum4 = checksums[4];
-//  execution_time0 = execution_times[0];
-//  execution_time1 = execution_times[1];
-//  execution_time2 = execution_times[2];
-//  execution_time3 = execution_times[3];
-//  execution_time4 = execution_times[4];
-  execution_time0 = HAL_GetTick()-start_time;
+  execution_time0 = execution_times[0];
+  execution_time1 = execution_times[1];
+  execution_time2 = execution_times[2];
+  execution_time3 = execution_times[3];
+  execution_time4 = execution_times[4];
+//  execution_time0 = HAL_GetTick()-start_time;
 
   //TODO: Visual indicator: Turn on LED1 to signal processing start
   GPIOB->ODR |= 2;
@@ -241,7 +241,7 @@ static void MX_GPIO_Init(void)
 //TODO: Function signatures you defined previously , implement them here
 uint64_t calculate_mandelbrot_fixed_point_arithmetic(int width, int height, int max_iterations){
   uint64_t mandelbrot_sum = 0;
-    int64_t s = (1<<20); //scaling factor
+    int64_t s = (100000000); //scaling factor
 
     int64_t x_scale = 3.5*s;
     int64_t x_shift = 2.5*s;
