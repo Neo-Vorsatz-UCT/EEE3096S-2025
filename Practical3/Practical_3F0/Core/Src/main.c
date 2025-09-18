@@ -240,7 +240,7 @@ static void MX_GPIO_Init(void)
 //TODO: Function signatures you defined previously , implement them here
 uint64_t calculate_mandelbrot_fixed_point_arithmetic(int width, int height, int max_iterations){
   uint64_t mandelbrot_sum = 0;
-    int64_t s = (100000000); //scaling factor
+    int64_t s = (1<<20); //scaling factor
 
     int64_t x_scale = 3.5*s;
     int64_t x_shift = 2.5*s;
