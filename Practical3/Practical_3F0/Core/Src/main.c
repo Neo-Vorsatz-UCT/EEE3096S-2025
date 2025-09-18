@@ -118,32 +118,34 @@ int main(void)
   GPIOB->ODR |= 1;
 
   //TODO: Benchmark and Profile Performance
+  int start_time = HAL_GetTick();
   int checksums[5];
-  int execution_times[5];
-  int start_time;
-  int end_time;
-  int width[] = {256, 500, 1000, 1500, 1920};
-  int height[] = {256, 500, 500, 750, 1080};
-//  for (int i=0; i<5; i++) {
+//  int execution_times[5];
+//  int start_time;
+//  int end_time;
+//  int width[] = {256, 500, 1000, 1500, 1920};
+//  int height[] = {256, 500, 500, 750, 1080};
+  for (int i=0; i<5; i++) {
 //	  start_time = HAL_GetTick();
-//	  checksums[i] = calculate_mandelbrot_fixed_point_arithmetic(dimensions[4], dimensions[4], max_iter[i]);
+	  checksums[i] = calculate_mandelbrot_fixed_point_arithmetic(dimensions[i], dimensions[i], MAX_ITER);
 //	  end_time = HAL_GetTick();
 //	  execution_times[i] = end_time-start_time;
-//  }
-  start_time = HAL_GetTick();
-  checksums[0] = calculate_mandelbrot_fixed_point_arithmetic(width[0], height[0], MAX_ITER);
-  end_time = HAL_GetTick();
-  execution_times[0] = end_time-start_time;
+  }
+//  start_time = HAL_GetTick();
+//  checksums[0] = calculate_mandelbrot_fixed_point_arithmetic(width[0], height[0], MAX_ITER);
+//  end_time = HAL_GetTick();
+//  execution_times[0] = end_time-start_time;
   checksum0 = checksums[0];
-//  checksum1 = checksums[1];
-//  checksum2 = checksums[2];
-//  checksum3 = checksums[3];
-//  checksum4 = checksums[4];
-  execution_time0 = execution_times[0];
+  checksum1 = checksums[1];
+  checksum2 = checksums[2];
+  checksum3 = checksums[3];
+  checksum4 = checksums[4];
+//  execution_time0 = execution_times[0];
 //  execution_time1 = execution_times[1];
 //  execution_time2 = execution_times[2];
 //  execution_time3 = execution_times[3];
 //  execution_time4 = execution_times[4];
+  execution_time0 = HAL_GetTick()-start_time;
 
   //TODO: Visual indicator: Turn on LED1 to signal processing start
   GPIOB->ODR |= 2;

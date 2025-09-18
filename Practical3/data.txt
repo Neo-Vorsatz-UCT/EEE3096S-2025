@@ -63,5 +63,11 @@ size	float			double
 256	(6,828|1,715,808)	(10,803|1,715,812)
 
 == Task 6 ==
+execution_time
+opti	STM32F0		STM32F4
+o0	291,850		26,000
+o1	38,132		2,545
+o2	37,950		2,243
+
 == Task 7 ==
 == Task 8 ==
