@@ -5,7 +5,8 @@ import numpy as np
 from matplotlib import pyplot as plt
 from scipy.io import wavfile
 
-PLOT = "sine"
+F_SIGNAL = 0.5
+PLOT = "drum"
 NS = 1024
 MAX = 4095
 
@@ -80,10 +81,15 @@ def wav_to_lut(path:str) -> list:
     """
     Takes the file path to a .wav file, and returns the LUT
     """
-    #extract 128 data points
+    #calculate the number of samples
+    frequency = 44100 #Hertz
+    desired_period = 2 #seconds
+    cropped_samples = frequency*desired_period #number of samples
+    #extract the desired number of data points
     sample_rate, data = wavfile.read(path)
     if data.ndim > 1:
         data = data[:, 0] #get only the first channel
+    data = data[:cropped_samples] #extracting the first few samples
     data = data.astype(np.float32) #convert type
     indices = np.linspace(0, len(data)-1, NS).astype(int)
     lut = data[indices] #extract 128 values
