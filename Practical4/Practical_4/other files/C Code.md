@@ -1,11 +1,9 @@
+```c
 /*
  1. Link: https://github.com/Neo-Vorsatz-UCT/EEE3096S-2025
-
  2. Group Number: 64
-
  3. Members: VRSNEO001
 */
-
 
 /* USER CODE BEGIN Header */
 /**
@@ -483,3 +481,4 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
+```
